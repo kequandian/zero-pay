@@ -8,7 +8,7 @@ CREATE TABLE `p_payment_bill` (
 	app_code varchar(100) NOT NULL COMMENT '应用秘钥',
 	create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	status varchar(50) NOT NULL DEFAULT 'PAY_PENDING' COMMENT '状态：ENABLED,DISABLED',
-	note varchar(250) DEFAULT COMMENT '备注',
+	note varchar(250) DEFAULT NULL COMMENT '备注',
 	PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8;
 
