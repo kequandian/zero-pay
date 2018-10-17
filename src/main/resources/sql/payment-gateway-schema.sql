@@ -2,7 +2,7 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `p_payment_app`;
-CREATE TABLE `p_payment_bill` (
+CREATE TABLE `p_payment_app` (
 	id BIGINT (20) NOT NULL AUTO_INCREMENT,
 	app_id varchar(50) NOT NULL COMMENT '应用ID',
 	app_code varchar(100) NOT NULL COMMENT '应用秘钥',
