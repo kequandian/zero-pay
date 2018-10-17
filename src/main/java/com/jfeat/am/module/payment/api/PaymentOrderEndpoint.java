@@ -2,7 +2,10 @@ package com.jfeat.am.module.payment.api;
 
 import com.jfeat.am.common.constant.tips.SuccessTip;
 import com.jfeat.am.common.constant.tips.Tip;
+import com.jfeat.am.common.persistence.model.WechatConfig;
 import com.jfeat.am.core.support.StrKit;
+import com.jfeat.am.modular.system.service.TenantService;
+import com.jfeat.am.modular.wechat.service.WechatConfigService;
 import com.jfeat.am.module.config.PaymentProperties;
 import com.jfeat.am.module.payment.api.param.OrderModel;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,10 @@ public class PaymentOrderEndpoint {
 
     @Resource
     PaymentProperties paymentProperties;
+    @Resource
+    WechatConfigService wechatConfigService;
+    @Resource
+    TenantService tenantService;
 
     @GetMapping
     public Tip queryOrder(@RequestParam String appId,
@@ -41,7 +48,8 @@ public class PaymentOrderEndpoint {
                 .append("&detail=").append(orderModel.getDetail())
                 .append("&totalFee=").append(orderModel.getTotalFee())
                 .append("&orderNum=").append(orderModel.getOrderNum());
-        String url = buildUrl(paymentProperties.getWechatPayUrl(), queryString.toString());
+        WechatConfig wechatConfig = wechatConfigService.getByTenantId(tenantService.getDefaultTenant().getId());
+        String url = buildUrl(wechatConfig.getHost() + "/payment/wpay", queryString.toString());
         result.put("wpayUrl", url);
         return SuccessTip.create(result);
     }
