@@ -1,6 +1,9 @@
 package com.jfeat.am.module.payment.api.param;
 
+import com.jfeat.am.module.payment.constant.PaymentType;
+
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * @author jackyhuang
@@ -9,15 +12,35 @@ import javax.validation.constraints.NotNull;
 public class OrderModel {
     private String appId;
     private String sign;
-    private String paymentType = "WECHAT";
+    private String paymentType = PaymentType.WECHAT.toString();
     @NotNull
-    private String totalFee;
+    private BigDecimal totalFee;
     @NotNull
     private String title;
     @NotNull
     private String detail;
     @NotNull
     private String orderNum;
+    private String notifyUrl;
+    private String customerData;
+
+    public String getCustomerData() {
+        return customerData;
+    }
+
+    public OrderModel setCustomerData(String customerData) {
+        this.customerData = customerData;
+        return this;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public OrderModel setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+        return this;
+    }
 
     public String getSign() {
         return sign;
@@ -55,11 +78,11 @@ public class OrderModel {
         return this;
     }
 
-    public String getTotalFee() {
+    public BigDecimal getTotalFee() {
         return totalFee;
     }
 
-    public OrderModel setTotalFee(String totalFee) {
+    public OrderModel setTotalFee(BigDecimal totalFee) {
         this.totalFee = totalFee;
         return this;
     }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.payment.services.persistence.dao.PaymentBillMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.jfeat.am.module.payment.services.persistence.model.PaymentBill">
+		<id column="id" property="id" />
+		<result column="app_id" property="appId" />
+		<result column="payment_type" property="paymentType" />
+		<result column="out_order_num" property="outOrderNum" />
+		<result column="total_fee" property="totalFee" />
+		<result column="title" property="title" />
+		<result column="detail" property="detail" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+		<result column="notify_url" property="notifyUrl" />
+		<result column="notify_result" property="notifyResult" />
+		<result column="notify_attempt_count" property="notifyAttemptCount" />
+		<result column="last_notify_time" property="lastNotifyTime" />
+		<result column="customer_data" property="customerData" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, app_id AS appId, payment_type AS paymentType, out_order_num AS outOrderNum, total_fee AS totalFee, title, detail, create_time AS createTime, status, notify_url AS notifyUrl, notify_result AS notifyResult, notify_attempt_count AS notifyAttemptCount, last_notify_time AS lastNotifyTime, customer_data AS customerData
+    </sql>
+
+</mapper>

@@ -21,6 +21,8 @@
         <sb-base.version>1.0.0</sb-base.version>
         <sb-crud.version>1.0.4-SNAPSHOT</sb-crud.version>
         <sb-wechat.version>1.2.0</sb-wechat.version>
+        <sb-log.version>1.0.0</sb-log.version>
+        <http-utils.version>1.0.0</http-utils.version>
         <skipStandalone>false</skipStandalone>
     </properties>
 
@@ -39,6 +41,23 @@
             <groupId>com.jfeat</groupId>
             <artifactId>sb-wechat</artifactId>
             <version>${sb-wechat.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jfeat</groupId>
+            <artifactId>sb-log</artifactId>
+            <version>${sb-log.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jfeat</groupId>
+            <artifactId>http-utils</artifactId>
+            <version>${http-utils.version}</version>
+        </dependency>
+
+        <!-- okhttp3 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.6.0</version>
         </dependency>
 
         <!--spring boot依赖-->
@@ -203,7 +222,7 @@
             <plugin>
                 <groupId>com.jfeat</groupId>
                 <artifactId>sb-code-generator</artifactId>
-                <version>1.0.2</version>
+                <version>1.2.2</version>
                 <configuration>
                     <!-- change to your module name -->
                     <moduleName>payment</moduleName>
@@ -212,6 +231,11 @@
                     <password>root</password>
                     <outputDir>src/main/java</outputDir>
                     <parentPackage>com.jfeat.am.module</parentPackage>
+                    <initialize>true</initialize>
+                    <tables>
+                        <table>p_payment_app</table>
+                        <table>p_payment_bill</table>
+                    </tables>
                 </configuration>
             </plugin>
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.payment.services.persistence.dao.PaymentAppMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.jfeat.am.module.payment.services.persistence.model.PaymentApp">
+		<id column="id" property="id" />
+		<result column="app_id" property="appId" />
+		<result column="app_code" property="appCode" />
+		<result column="app_name" property="appName" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+		<result column="note" property="note" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, app_id AS appId, app_code AS appCode, app_name AS appName, create_time AS createTime, status, note
+    </sql>
+
+</mapper>

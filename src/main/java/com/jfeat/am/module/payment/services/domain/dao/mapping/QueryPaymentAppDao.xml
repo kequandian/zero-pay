@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfeat.am.module.payment.services.domain.dao.QueryPaymentAppDao">
+    <sql id="Base_Column_List">
+        p_payment_app.*
+    </sql>
+    <select id="findPaymentAppPage" resultType="PaymentAppRecord" parameterType="PaymentAppRecord">
+        SELECT p_payment_app.*
+        FROM p_payment_app
+        WHERE 1=1
+        <if test="record.id != null and record.id>0 ">
+            AND p_payment_app.id LIKE CONCAT('%',#{record.id},'%')
+        </if>
+
+        <if test="record.appId != null and record.appId!= ''">
+            AND p_payment_app.app_id LIKE CONCAT('%',#{record.appId},'%')
+        </if>
+
+        <if test="record.appCode != null and record.appCode!= ''">
+            AND p_payment_app.app_code LIKE CONCAT('%',#{record.appCode},'%')
+        </if>
+
+        <if test="record.createTime != null and record.createTime>0 ">
+            AND p_payment_app.create_time LIKE CONCAT('%',#{record.createTime},'%')
+        </if>
+        <if test="record.status != null and record.status!= ''">
+            AND p_payment_app.status LIKE CONCAT('%',#{record.status},'%')
+        </if>
+        <if test="record.note != null and record.note!= ''">
+            AND p_payment_app.note LIKE CONCAT('%',#{record.note},'%')
+        </if>
+        <!--
+<if test="search != null and search != ''">
+OR p_payment_app.name LIKE CONCAT('%',#{search},'%')
+</if>
+-->
+    </select>
+
+    <select id="findByAppId" resultType="PaymentApp">
+        SELECT *
+        FROM p_payment_app
+        WHERE app_id = #{appId}
+    </select>
+</mapper>
