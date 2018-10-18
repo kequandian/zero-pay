@@ -1,15 +1,15 @@
 package com.jfeat.am.module.payment.api;
 
-import com.jfeat.am.common.constant.tips.ErrorTip;
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.jfeat.am.common.constant.tips.SuccessTip;
 import com.jfeat.am.common.constant.tips.Tip;
-import com.jfeat.am.common.exception.BusinessCode;
-import com.jfeat.am.common.exception.BusinessException;
 import com.jfeat.am.common.persistence.model.WechatConfig;
+import com.jfeat.am.core.support.BeanKit;
 import com.jfeat.am.core.support.StrKit;
+import com.jfeat.am.core.util.JsonKit;
 import com.jfeat.am.modular.system.service.TenantService;
 import com.jfeat.am.modular.wechat.service.WechatConfigService;
-import com.jfeat.am.module.config.PaymentProperties;
 import com.jfeat.am.module.payment.api.param.NotifyModel;
 import com.jfeat.am.module.payment.api.param.OrderModel;
 import com.jfeat.am.module.payment.constant.PaymentBizException;
@@ -18,10 +18,14 @@ import com.jfeat.am.module.payment.services.domain.service.PaymentAppService;
 import com.jfeat.am.module.payment.services.domain.service.PaymentBillService;
 import com.jfeat.am.module.payment.services.persistence.model.PaymentApp;
 import com.jfeat.am.module.payment.services.persistence.model.PaymentBill;
+import com.jfeat.am.module.payment.utils.PaymentKit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +36,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/pub/payment/order")
 public class PaymentOrderEndpoint {
+
+    private static final Logger logger = LoggerFactory.getLogger(PaymentOrderEndpoint.class);
 
     @Resource
     WechatConfigService wechatConfigService;
@@ -51,10 +57,15 @@ public class PaymentOrderEndpoint {
      */
     @PostMapping("/notify")
     public Tip testNotify(@RequestBody NotifyModel notifyModel) {
-        if ("demo".equals(notifyModel.getAppId())) {
-            return SuccessTip.create();
+        logger.debug("notify model: {}", JsonKit.toJson(notifyModel));
+        PaymentApp paymentApp = queryPaymentAppDao.findByAppId(notifyModel.getAppId());
+        if (paymentApp == null || !"demo".equals(paymentApp.getAppId())) {
+            throw PaymentBizException.INVALID_APP_ID.create();
         }
-        throw PaymentBizException.INVALID_APP_ID.create();
+        Map<String, String> params = PaymentKit.convertToMap(notifyModel);
+        boolean verify = PaymentKit.verifySign(params, paymentApp.getAppCode());
+        logger.debug("notify verify sign result = {}", verify);
+        return SuccessTip.create();
     }
 
     @GetMapping
@@ -66,14 +77,16 @@ public class PaymentOrderEndpoint {
     }
 
     @PostMapping
-    public Tip createOrder(@Valid @RequestBody OrderModel orderModel) {
+    public Tip createOrder(@Valid @RequestBody OrderModel orderModel) throws UnsupportedEncodingException {
         PaymentApp paymentApp = queryPaymentAppDao.findByAppId(orderModel.getAppId());
         if (paymentApp == null) {
             throw PaymentBizException.INVALID_APP_ID.create();
         }
 
-        //TODO check sign
-
+        Map<String, String> params = PaymentKit.convertToMap(orderModel);
+        if (!PaymentKit.verifySign(params, paymentApp.getAppCode())) {
+            throw PaymentBizException.INVALID_SIGN.create();
+        }
 
         PaymentBill paymentBill = new PaymentBill();
         paymentBill.setAppId(paymentApp.getAppId());

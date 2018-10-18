@@ -6,8 +6,18 @@ package com.jfeat.am.module.payment.api.param;
  */
 public class NotifyModel {
     public String appId;
-    public String sign;
     public String customerData;
+    public String orderNum;
+    public String sign;
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public NotifyModel setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
+        return this;
+    }
 
     public String getAppId() {
         return appId;

@@ -3,13 +3,17 @@ package com.jfeat.am.module.payment.services.domain.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.jfeat.am.core.support.StrKit;
 import com.jfeat.am.core.util.JsonKit;
+import com.jfeat.am.module.payment.constant.AppStatus;
 import com.jfeat.am.module.payment.constant.BillNotifyResult;
 import com.jfeat.am.module.payment.constant.BillStatus;
+import com.jfeat.am.module.payment.services.domain.dao.QueryPaymentAppDao;
 import com.jfeat.am.module.payment.services.domain.dao.QueryPaymentBillDao;
 import com.jfeat.am.module.payment.services.domain.service.PaymentBillService;
 
 import com.jfeat.am.module.payment.services.crud.service.impl.CRUDPaymentBillServiceImpl;
+import com.jfeat.am.module.payment.services.persistence.model.PaymentApp;
 import com.jfeat.am.module.payment.services.persistence.model.PaymentBill;
+import com.jfeat.am.module.payment.utils.PaymentKit;
 import com.jfeat.http.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +40,15 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
     QueryPaymentBillDao queryPaymentBillDao;
     @Resource
     PaymentBillService paymentBillService;
+    @Resource
+    QueryPaymentAppDao queryPaymentAppDao;
 
     @Override
     public void notifyPayResult(String appId, String orderNum) {
+        PaymentApp paymentApp = queryPaymentAppDao.findByAppId(appId);
+        if (paymentApp == null || paymentApp.getStatus().equals(AppStatus.DISABLED.toString())) {
+            return;
+        }
         PaymentBill bill = queryPaymentBillDao.selectOne(appId, orderNum);
         if (bill == null) {
             return;
@@ -54,10 +64,11 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("sign", "demo");//TODO update sign
         params.put("appId", bill.getAppId());
         params.put("orderNum", bill.getOutOrderNum());
-        String data = "";
+        params.put("customerData", bill.getCustomerData());
+        params.put("sign", PaymentKit.createSign(params, paymentApp.getAppCode()));
+        logger.debug("notify params: {}", params);
         String result = HttpUtils.post(bill.getNotifyUrl(), JsonKit.toJson(params));
         logger.debug("notify result = {}", result);
 

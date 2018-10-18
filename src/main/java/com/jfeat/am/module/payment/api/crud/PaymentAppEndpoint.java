@@ -42,15 +42,14 @@ public class PaymentAppEndpoint extends BaseController {
     @ApiOperation(value = "新建 PaymentApp", response = PaymentAppModel.class)
     public Tip createPaymentApp(@RequestBody PaymentAppModel entity) {
 
-        Integer affected = 0;
         try {
-            affected = paymentAppService.createMaster(entity);
+            paymentAppService.createMaster(entity);
 
         } catch (DuplicateKeyException e) {
             throw new BusinessException(BusinessCode.DuplicateKey);
         }
 
-        return SuccessTip.create(affected);
+        return SuccessTip.create(entity);
     }
 
     @GetMapping("/{id}")
