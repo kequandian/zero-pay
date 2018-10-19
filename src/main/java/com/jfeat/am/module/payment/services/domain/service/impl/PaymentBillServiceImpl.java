@@ -44,7 +44,7 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
     QueryPaymentAppDao queryPaymentAppDao;
 
     @Override
-    public void notifyPayResult(String appId, String orderNum) {
+    public void notifyPayResult(String appId, String orderNum, String tranId) {
         PaymentApp paymentApp = queryPaymentAppDao.findByAppId(appId);
         if (paymentApp == null || paymentApp.getStatus().equals(AppStatus.DISABLED.toString())) {
             return;
@@ -76,6 +76,7 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
         Integer code = jsonObject.getInteger("code");
         if (code == 200) {
             bill.setNotifyResult(BillNotifyResult.NOTIFIED.getValue());
+            bill.setTranId(tranId);
             paymentBillService.updateMaster(bill);
         }
     }

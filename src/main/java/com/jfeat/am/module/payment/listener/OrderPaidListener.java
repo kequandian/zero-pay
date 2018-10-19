@@ -33,7 +33,7 @@ public class OrderPaidListener extends BasicEventListener<PaidBean> {
         // do your business
         PaidBean paidBean = basicEvent.getTarget();
         String[] strings = paidBean.getOrderNumber().split("_");
-        paymentBillService.notifyPayResult(strings[0], strings[1]);
+        paymentBillService.notifyPayResult(strings[0], strings[1], paidBean.getTransactionId());
     }
 }
 

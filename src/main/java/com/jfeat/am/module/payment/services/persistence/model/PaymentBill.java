@@ -17,7 +17,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Code Generator
- * @since 2018-10-18
+ * @since 2018-10-19
  */
 @TableName("p_payment_bill")
 public class PaymentBill extends Model<PaymentBill> {
@@ -26,6 +26,11 @@ public class PaymentBill extends Model<PaymentBill> {
 
 	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
+    /**
+     * 账单编号
+     */
+	@TableField("bill_num")
+	private String billNum;
     /**
      * 应用ID
      */
@@ -54,6 +59,11 @@ public class PaymentBill extends Model<PaymentBill> {
      * 订单描述
      */
 	private String detail;
+    /**
+     * 外部支付系统的交易号
+     */
+	@TableField("tran_id")
+	private String tranId;
     /**
      * 创建时间
      */
@@ -96,6 +106,15 @@ public class PaymentBill extends Model<PaymentBill> {
 
 	public PaymentBill setId(Long id) {
 		this.id = id;
+		return this;
+	}
+
+	public String getBillNum() {
+		return billNum;
+	}
+
+	public PaymentBill setBillNum(String billNum) {
+		this.billNum = billNum;
 		return this;
 	}
 
@@ -150,6 +169,15 @@ public class PaymentBill extends Model<PaymentBill> {
 
 	public PaymentBill setDetail(String detail) {
 		this.detail = detail;
+		return this;
+	}
+
+	public String getTranId() {
+		return tranId;
+	}
+
+	public PaymentBill setTranId(String tranId) {
+		this.tranId = tranId;
 		return this;
 	}
 
@@ -218,6 +246,8 @@ public class PaymentBill extends Model<PaymentBill> {
 
 	public static final String ID = "id";
 
+	public static final String BILL_NUM = "bill_num";
+
 	public static final String APP_ID = "app_id";
 
 	public static final String PAYMENT_TYPE = "payment_type";
@@ -229,6 +259,8 @@ public class PaymentBill extends Model<PaymentBill> {
 	public static final String TITLE = "title";
 
 	public static final String DETAIL = "detail";
+
+	public static final String TRAN_ID = "tran_id";
 
 	public static final String CREATE_TIME = "create_time";
 
@@ -253,12 +285,14 @@ public class PaymentBill extends Model<PaymentBill> {
 	public String toString() {
 		return "PaymentBill{" +
 			"id=" + id +
+			", billNum=" + billNum +
 			", appId=" + appId +
 			", paymentType=" + paymentType +
 			", outOrderNum=" + outOrderNum +
 			", totalFee=" + totalFee +
 			", title=" + title +
 			", detail=" + detail +
+			", tranId=" + tranId +
 			", createTime=" + createTime +
 			", status=" + status +
 			", notifyUrl=" + notifyUrl +

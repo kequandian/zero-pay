@@ -7,6 +7,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.weixin.sdk.utils.Charsets;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.TreeMap;
@@ -86,6 +87,15 @@ public class PaymentKit {
 
     public static Map<String, String> convertToMap(Object obj) {
         return JSONObject.parseObject(JSONObject.toJSONString(obj), new TypeReference<Map<String, String>>(){});
+    }
+
+    /**
+     * 2.10 => 210
+     * @param price
+     * @return
+     */
+    public static String convertPrice(double price) {
+        return String.valueOf(BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(100)).intValue());
     }
 
 }

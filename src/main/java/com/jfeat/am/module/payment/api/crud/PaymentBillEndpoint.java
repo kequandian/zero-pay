@@ -15,6 +15,7 @@ import com.jfeat.am.module.payment.services.domain.model.PaymentBillRecord;
 import com.jfeat.am.module.payment.services.domain.service.PaymentBillService;
 import com.jfeat.am.module.payment.services.persistence.model.PaymentBill;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,7 @@ public class PaymentBillEndpoint extends BaseController {
         }
         paymentBill.setStatus(BillStatus.PAID.toString());
         paymentBillService.updateMaster(paymentBill);
-        paymentBillService.notifyPayResult(appId, orderNum);
+        paymentBillService.notifyPayResult(appId, orderNum, RandomStringUtils.randomAlphabetic(10));
         return SuccessTip.create();
     }
 
@@ -67,17 +68,8 @@ public class PaymentBillEndpoint extends BaseController {
     public Tip queryPaymentBills(Page<PaymentBillRecord> page,
                                  @RequestParam(name = "pageNum", required = false, defaultValue = "1") Integer pageNum,
                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
-                                 @RequestParam(name = "search", required = false) String search,
-                                 @RequestParam(name = "id", required = false) Long id,
                                  @RequestParam(name = "appId", required = false) String appId,
-                                 @RequestParam(name = "paymentType", required = false) String paymentType,
-                                 @RequestParam(name = "outOrderNum", required = false) String outOrderNum,
-                                 @RequestParam(name = "createTime", required = false) Date createTime,
                                  @RequestParam(name = "status", required = false) String status,
-                                 @RequestParam(name = "notifyUrl", required = false) String notifyUrl,
-                                 @RequestParam(name = "notifyResult", required = false) Integer notifyResult,
-                                 @RequestParam(name = "notifyAttemptCount", required = false) Integer notifyAttemptCount,
-                                 @RequestParam(name = "lastNotifyTime", required = false) Date lastNotifyTime,
                                  @RequestParam(name = "orderBy", required = false) String orderBy,
                                  @RequestParam(name = "sort", required = false) String sort) {
         if (orderBy != null && orderBy.length() > 0) {
@@ -95,18 +87,10 @@ public class PaymentBillEndpoint extends BaseController {
         page.setSize(pageSize);
 
         PaymentBillRecord record = new PaymentBillRecord();
-        record.setId(id);
         record.setAppId(appId);
-        record.setPaymentType(paymentType);
-        record.setOutOrderNum(outOrderNum);
-        record.setCreateTime(createTime);
         record.setStatus(status);
-        record.setNotifyUrl(notifyUrl);
-        record.setNotifyResult(notifyResult);
-        record.setNotifyAttemptCount(notifyAttemptCount);
-        record.setLastNotifyTime(lastNotifyTime);
 
-        page.setRecords(queryPaymentBillDao.findPaymentBillPage(page, record, search, orderBy));
+        page.setRecords(queryPaymentBillDao.findPaymentBillPage(page, record, null, orderBy));
 
         return SuccessTip.create(page);
     }

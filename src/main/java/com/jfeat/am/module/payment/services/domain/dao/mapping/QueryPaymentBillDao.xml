@@ -8,49 +8,13 @@
         SELECT p_payment_bill.*
         FROM p_payment_bill
         WHERE 1=1
-        <if test="record.id != null and record.id>0 ">
-            AND p_payment_bill.id LIKE CONCAT('%',#{record.id},'%')
-        </if>
 
-        <if test="record.appId != null and record.appId>0 ">
-            AND p_payment_bill.app_id LIKE CONCAT('%',#{record.appId},'%')
-        </if>
-
-        <if test="record.paymentType != null and record.paymentType!= ''">
-            AND p_payment_bill.payment_type LIKE CONCAT('%',#{record.paymentType},'%')
-        </if>
-
-        <if test="record.outOrderNum != null and record.outOrderNum!= ''">
-            AND p_payment_bill.out_order_num LIKE CONCAT('%',#{record.outOrderNum},'%')
-        </if>
-
-        <if test="record.createTime != null and record.createTime>0 ">
-            AND p_payment_bill.create_time LIKE CONCAT('%',#{record.createTime},'%')
+        <if test="record.appId != null and record.appId != ''">
+            AND p_payment_bill.app_id = #{record.appId}
         </if>
         <if test="record.status != null and record.status!= ''">
-            AND p_payment_bill.status LIKE CONCAT('%',#{record.status},'%')
+            AND p_payment_bill.status = #{record.status}
         </if>
-
-        <if test="record.notifyUrl != null and record.notifyUrl!= ''">
-            AND p_payment_bill.notify_url LIKE CONCAT('%',#{record.notifyUrl},'%')
-        </if>
-
-        <if test="record.notifyResult != null and record.notifyResult>0 ">
-            AND p_payment_bill.notify_result LIKE CONCAT('%',#{record.notifyResult},'%')
-        </if>
-
-        <if test="record.notifyAttemptCount != null and record.notifyAttemptCount>0 ">
-            AND p_payment_bill.notify_attempt_count LIKE CONCAT('%',#{record.notifyAttemptCount},'%')
-        </if>
-
-        <if test="record.lastNotifyTime != null and record.lastNotifyTime>0 ">
-            AND p_payment_bill.last_notify_time LIKE CONCAT('%',#{record.lastNotifyTime},'%')
-        </if>
-        <!--
-<if test="search != null and search != ''">
-OR p_payment_bill.name LIKE CONCAT('%',#{search},'%')
-</if>
--->
     </select>
 
     <select id="selectOne" resultType="PaymentBill">

@@ -18,12 +18,14 @@ CREATE TABLE `p_payment_app` (
 DROP TABLE IF EXISTS `p_payment_bill`;
 CREATE TABLE `p_payment_bill` (
 	id BIGINT (20) NOT NULL AUTO_INCREMENT,
+	bill_num varchar(100) COMMENT '账单编号',
 	app_id varchar(50) NOT NULL COMMENT '应用ID',
 	payment_type varchar(50) DEFAULT NULL COMMENT '支付类型，WECHAT，ALIPAY',
-	out_order_num varchar(100) NOT NULL COMMENT '业务系统的订单号',
+	out_order_num varchar(100) COMMENT '业务系统的订单号',
 	total_fee decimal(10, 2) NOT NULL COMMENT '订单价钱',
 	title varchar(250) DEFAULT NULL COMMENT '订单标题',
 	detail varchar(250) DEFAULT NULL COMMENT '订单描述',
+	tran_id varchar(250) DEFAULT NULL COMMENT '外部支付系统的交易号',
 	create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	status varchar(50) NOT NULL DEFAULT 'PAY_PENDING' COMMENT '状态：PAY_PENDING,PAID,REFUNDED',
 	notify_url varchar(250) DEFAULT NULL COMMENT '支付结果回调地址',

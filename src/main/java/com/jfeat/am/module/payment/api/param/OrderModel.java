@@ -1,6 +1,7 @@
 package com.jfeat.am.module.payment.api.param;
 
 import com.jfeat.am.module.payment.constant.PaymentType;
+import com.jfeat.am.module.payment.constant.TradeType;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -12,17 +13,28 @@ import java.math.BigDecimal;
 public class OrderModel {
     private String appId;
     private String sign;
-    private String paymentType = PaymentType.WECHAT.toString();
+    private String paymentType;
+    private String tradeType;
+
     @NotNull
     private BigDecimal totalFee;
     @NotNull
     private String title;
     @NotNull
     private String detail;
-    @NotNull
+
     private String orderNum;
     private String notifyUrl;
     private String customerData;
+
+    public String getTradeType() {
+        return tradeType;
+    }
+
+    public OrderModel setTradeType(String tradeType) {
+        this.tradeType = tradeType;
+        return this;
+    }
 
     public String getCustomerData() {
         return customerData;

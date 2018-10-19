@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 public class PaymentProperties {
     public static final String PREFIX = "payment";
 
-    private String wechatPayUrl;
+    private String apiHost;
 
-    public String getWechatPayUrl() {
-        return wechatPayUrl;
+    public String getApiHost() {
+        return apiHost;
     }
 
-    public PaymentProperties setWechatPayUrl(String wechatPayUrl) {
-        this.wechatPayUrl = wechatPayUrl;
+    public PaymentProperties setApiHost(String apiHost) {
+        this.apiHost = apiHost;
         return this;
     }
 }

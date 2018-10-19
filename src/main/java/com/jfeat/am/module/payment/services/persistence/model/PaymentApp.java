@@ -16,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Code Generator
- * @since 2018-10-18
+ * @since 2018-10-19
  */
 @TableName("p_payment_app")
 public class PaymentApp extends Model<PaymentApp> {

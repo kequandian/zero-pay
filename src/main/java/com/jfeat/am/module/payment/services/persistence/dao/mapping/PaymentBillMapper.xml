@@ -5,12 +5,14 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.jfeat.am.module.payment.services.persistence.model.PaymentBill">
 		<id column="id" property="id" />
+		<result column="bill_num" property="billNum" />
 		<result column="app_id" property="appId" />
 		<result column="payment_type" property="paymentType" />
 		<result column="out_order_num" property="outOrderNum" />
 		<result column="total_fee" property="totalFee" />
 		<result column="title" property="title" />
 		<result column="detail" property="detail" />
+		<result column="tran_id" property="tranId" />
 		<result column="create_time" property="createTime" />
 		<result column="status" property="status" />
 		<result column="notify_url" property="notifyUrl" />
@@ -22,7 +24,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, app_id AS appId, payment_type AS paymentType, out_order_num AS outOrderNum, total_fee AS totalFee, title, detail, create_time AS createTime, status, notify_url AS notifyUrl, notify_result AS notifyResult, notify_attempt_count AS notifyAttemptCount, last_notify_time AS lastNotifyTime, customer_data AS customerData
+        id, bill_num AS billNum, app_id AS appId, payment_type AS paymentType, out_order_num AS outOrderNum, total_fee AS totalFee, title, detail, tran_id AS tranId, create_time AS createTime, status, notify_url AS notifyUrl, notify_result AS notifyResult, notify_attempt_count AS notifyAttemptCount, last_notify_time AS lastNotifyTime, customer_data AS customerData
     </sql>
 
 </mapper>
