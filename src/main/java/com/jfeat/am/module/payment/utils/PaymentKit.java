@@ -3,12 +3,11 @@ package com.jfeat.am.module.payment.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.jfinal.kit.HashKit;
-import com.jfinal.kit.StrKit;
-import com.jfinal.weixin.sdk.utils.Charsets;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,6 +16,13 @@ import java.util.TreeMap;
  * @date 2018/10/18
  */
 public class PaymentKit {
+
+    // 字符集GBK
+    public static final Charset GBK = Charset.forName("GBK");
+    // 字符集ISO-8859-1
+    public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    // 字符集utf-8
+    public static final Charset UTF_8 = Charset.forName("UTF-8");
 
     /**
      * 组装签名的字段
@@ -32,7 +38,7 @@ public class PaymentKit {
         boolean first = true;
         for (Map.Entry<String, String> param : sortedParams.entrySet()) {
             String value = param.getValue();
-            if (StrKit.isBlank(value)) {
+            if (isBlank(value)) {
                 continue;
             }
             if (first) {
@@ -56,7 +62,7 @@ public class PaymentKit {
      * @throws UnsupportedEncodingException 编码错误
      */
     public static String urlEncode(String src) throws UnsupportedEncodingException {
-        return URLEncoder.encode(src, Charsets.UTF_8.name()).replace("+", "%20");
+        return URLEncoder.encode(src, UTF_8.name()).replace("+", "%20");
     }
 
     /**
@@ -96,6 +102,13 @@ public class PaymentKit {
      */
     public static String convertPrice(double price) {
         return String.valueOf(BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(100)).intValue());
+    }
+
+    /**
+     * 字符串为 null 或者为  "" 时返回 true
+     */
+    private static boolean isBlank(String str) {
+        return str == null || "".equals(str.trim());
     }
 
 }
