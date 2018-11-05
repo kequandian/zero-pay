@@ -51,33 +51,45 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
         }
         PaymentBill bill = queryPaymentBillDao.selectOne(appId, orderNum);
         if (bill == null) {
+            logger.debug("bill not found. appId={},orderNum={}", appId, orderNum);
             return;
         }
-        if (!bill.getStatus().equals(BillStatus.PAID.toString())) {
+        if (!bill.getStatus().equals(BillStatus.PAY_PENDING.toString())) {
+            logger.debug("bill is not PAY_PENDING. appId={},orderNum={},status={}", appId, orderNum,bill.getStatus());
             return;
         }
         if (StrKit.isBlank(bill.getNotifyUrl())) {
+            logger.debug("not notifyUrl defined, appId={},orderNum={}", appId, orderNum);
             return;
         }
         if (bill.getNotifyResult() == BillNotifyResult.NOTIFIED.getValue()) {
+            logger.debug("already notified, appId={},orderNum={}", appId, orderNum);
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
-        params.put("appId", bill.getAppId());
-        params.put("orderNum", bill.getOutOrderNum());
-        params.put("customerData", bill.getCustomerData());
-        params.put("sign", PaymentKit.createSign(params, paymentApp.getAppCode()));
-        logger.debug("notify params: {}", params);
-        String result = HttpUtils.post(bill.getNotifyUrl(), JsonKit.toJson(params));
-        logger.debug("notify result = {}", result);
+        bill.setStatus(BillStatus.PAID.toString());
+        bill.setTranId(tranId);
+        paymentBillService.updateMaster(bill);
 
-        JSONObject jsonObject = JSONObject.parseObject(result);
-        Integer code = jsonObject.getInteger("code");
-        if (code == 200) {
-            bill.setNotifyResult(BillNotifyResult.NOTIFIED.getValue());
-            bill.setTranId(tranId);
-            paymentBillService.updateMaster(bill);
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("appId", bill.getAppId());
+            params.put("orderNum", bill.getOutOrderNum());
+            params.put("customerData", bill.getCustomerData());
+            params.put("sign", PaymentKit.createSign(params, paymentApp.getAppCode()));
+            logger.debug("notify params: {}", params);
+            String result = HttpUtils.post(bill.getNotifyUrl(), JsonKit.toJson(params));
+            logger.debug("notify result = {}", result);
+
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            Integer code = jsonObject.getInteger("code");
+            if (code == 200) {
+                bill.setNotifyResult(BillNotifyResult.NOTIFIED.getValue());
+                paymentBillService.updateMaster(bill);
+            }
+        }
+        catch (Exception ex) {
+            logger.error("error occurred while notifying. error = " + ex.getMessage());
         }
     }
 }
