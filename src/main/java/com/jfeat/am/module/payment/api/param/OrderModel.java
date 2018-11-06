@@ -26,6 +26,16 @@ public class OrderModel {
     private String orderNum;
     private String notifyUrl;
     private String customerData;
+    private String returnUrl;
+
+    public String getReturnUrl() {
+        return returnUrl;
+    }
+
+    public OrderModel setReturnUrl(String returnUrl) {
+        this.returnUrl = returnUrl;
+        return this;
+    }
 
     public String getTradeType() {
         return tradeType;

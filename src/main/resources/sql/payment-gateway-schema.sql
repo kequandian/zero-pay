@@ -33,6 +33,7 @@ CREATE TABLE `p_payment_bill` (
 	notify_attempt_count int DEFAULT 0 COMMENT '支付结果通知次数',
 	last_notify_time datetime DEFAULT NULL COMMENT '最后一次通知时间',
 	customer_data varchar(250) DEFAULT NULL COMMENT '业务层传来的数据,notify 时原样返回',
+	return_url varchar(250) DEFAULT NULL COMMENT '支付后返回业务层的URL',
 	PRIMARY KEY (id),
 	UNIQUE(app_id, out_order_num)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8;

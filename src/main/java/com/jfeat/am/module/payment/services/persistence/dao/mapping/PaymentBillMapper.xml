@@ -20,11 +20,12 @@
 		<result column="notify_attempt_count" property="notifyAttemptCount" />
 		<result column="last_notify_time" property="lastNotifyTime" />
 		<result column="customer_data" property="customerData" />
+		<result column="return_url" property="returnUrl" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bill_num AS billNum, app_id AS appId, payment_type AS paymentType, out_order_num AS outOrderNum, total_fee AS totalFee, title, detail, tran_id AS tranId, create_time AS createTime, status, notify_url AS notifyUrl, notify_result AS notifyResult, notify_attempt_count AS notifyAttemptCount, last_notify_time AS lastNotifyTime, customer_data AS customerData
+        id, bill_num AS billNum, app_id AS appId, payment_type AS paymentType, out_order_num AS outOrderNum, total_fee AS totalFee, title, detail, tran_id AS tranId, create_time AS createTime, status, notify_url AS notifyUrl, notify_result AS notifyResult, notify_attempt_count AS notifyAttemptCount, last_notify_time AS lastNotifyTime, customer_data AS customerData, return_url AS returnUrl
     </sql>
 
 </mapper>

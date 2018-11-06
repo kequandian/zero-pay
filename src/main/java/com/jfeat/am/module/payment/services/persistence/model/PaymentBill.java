@@ -17,7 +17,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Code Generator
- * @since 2018-10-19
+ * @since 2018-11-06
  */
 @TableName("p_payment_bill")
 public class PaymentBill extends Model<PaymentBill> {
@@ -98,6 +98,11 @@ public class PaymentBill extends Model<PaymentBill> {
      */
 	@TableField("customer_data")
 	private String customerData;
+    /**
+     * 支付后返回业务层的URL
+     */
+	@TableField("return_url")
+	private String returnUrl;
 
 
 	public Long getId() {
@@ -244,6 +249,15 @@ public class PaymentBill extends Model<PaymentBill> {
 		return this;
 	}
 
+	public String getReturnUrl() {
+		return returnUrl;
+	}
+
+	public PaymentBill setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
+		return this;
+	}
+
 	public static final String ID = "id";
 
 	public static final String BILL_NUM = "bill_num";
@@ -276,6 +290,8 @@ public class PaymentBill extends Model<PaymentBill> {
 
 	public static final String CUSTOMER_DATA = "customer_data";
 
+	public static final String RETURN_URL = "return_url";
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
@@ -300,6 +316,7 @@ public class PaymentBill extends Model<PaymentBill> {
 			", notifyAttemptCount=" + notifyAttemptCount +
 			", lastNotifyTime=" + lastNotifyTime +
 			", customerData=" + customerData +
+			", returnUrl=" + returnUrl +
 			"}";
 	}
 }

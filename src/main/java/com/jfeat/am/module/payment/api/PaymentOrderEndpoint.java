@@ -158,6 +158,7 @@ public class PaymentOrderEndpoint extends BaseController {
         paymentBill.setPaymentType(orderModel.getPaymentType());
         paymentBill.setNotifyUrl(orderModel.getNotifyUrl());
         paymentBill.setCustomerData(orderModel.getCustomerData());
+        paymentBill.setReturnUrl(orderModel.getReturnUrl());
         paymentBillService.createMaster(paymentBill);
         paymentBill.setBillNum(IdWorker.getIdStr());
         if (StrKit.isBlank(orderModel.getOrderNum())) {
@@ -170,16 +171,16 @@ public class PaymentOrderEndpoint extends BaseController {
         result.put("billNum", paymentBill.getBillNum());
 
         if (TradeType.WPA.toString().equals(orderModel.getTradeType())) {
-            handleWechat(result, paymentBill);
+            handleWechat(result, paymentBill, paymentApp);
         }
         if (TradeType.NATIVE.toString().equals(orderModel.getTradeType())) {
-            handleWechatNative(result, paymentBill);
+            handleWechatNative(result, paymentBill, paymentApp);
         }
 
         return SuccessTip.create(result);
     }
 
-    private void handleWechatNative(Map<String, String> result, PaymentBill paymentBill) {
+    private void handleWechatNative(Map<String, String> result, PaymentBill paymentBill, PaymentApp paymentApp) {
         Map<String, String> pushOrderResult = wechatPushOrderService.pushOrder(paymentBill.getTitle(),
                 paymentBill.getDetail(),
                 paymentBill.getOutOrderNum(),
@@ -192,12 +193,14 @@ public class PaymentOrderEndpoint extends BaseController {
         result.put("wpayCode", pushOrderResult.get("codeUrl"));
     }
 
-    private void handleWechat(Map<String, String> result, PaymentBill paymentBill) throws UnsupportedEncodingException {
+    private void handleWechat(Map<String, String> result, PaymentBill paymentBill, PaymentApp paymentApp) throws UnsupportedEncodingException {
         StringBuilder queryString = new StringBuilder();
         queryString.append("title=").append(PaymentKit.urlEncode(paymentBill.getTitle()))
                 .append("&detail=").append(PaymentKit.urlEncode(paymentBill.getDetail()))
                 .append("&totalFee=").append(paymentBill.getTotalFee())
-                .append("&orderNum=").append(paymentBill.getAppId() + "_" + paymentBill.getOutOrderNum());
+                .append("&orderNum=").append(paymentBill.getAppId() + "_" + paymentBill.getOutOrderNum())
+                .append("&appName=").append(paymentApp.getAppName())
+                .append("&returnUrl=").append(paymentBill.getReturnUrl());
 
         WechatConfig wechatConfig = wechatConfigService.getByTenantId(tenantService.getDefaultTenant().getId());
         String url = buildUrl(wechatConfig.getHost() + "/payment/wpay", queryString.toString());
