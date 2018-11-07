@@ -200,7 +200,7 @@ public class PaymentOrderEndpoint extends BaseController {
                 .append("&totalFee=").append(paymentBill.getTotalFee())
                 .append("&orderNum=").append(paymentBill.getAppId() + "_" + paymentBill.getOutOrderNum())
                 .append("&appName=").append(paymentApp.getAppName())
-                .append("&returnUrl=").append(paymentBill.getReturnUrl());
+                .append("&returnUrl=").append(PaymentKit.urlEncode(paymentBill.getReturnUrl()));
 
         WechatConfig wechatConfig = wechatConfigService.getByTenantId(tenantService.getDefaultTenant().getId());
         String url = buildUrl(wechatConfig.getHost() + "/payment/wpay", queryString.toString());
