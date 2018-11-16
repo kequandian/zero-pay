@@ -14,6 +14,7 @@ import com.jfeat.am.modular.wechat.service.WechatPushOrderService;
 import com.jfeat.am.module.config.PaymentProperties;
 import com.jfeat.am.module.payment.api.param.NotifyModel;
 import com.jfeat.am.module.payment.api.param.OrderModel;
+import com.jfeat.am.module.payment.constant.BillStatus;
 import com.jfeat.am.module.payment.constant.PaymentBizException;
 import com.jfeat.am.module.payment.constant.PaymentType;
 import com.jfeat.am.module.payment.constant.TradeType;
@@ -26,6 +27,7 @@ import com.jfeat.am.module.payment.services.persistence.model.PaymentBill;
 import com.jfeat.am.module.payment.utils.PaymentKit;
 import com.jfinal.weixin.sdk.kit.IpKit;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -136,6 +138,9 @@ public class PaymentOrderEndpoint extends BaseController {
         if (paymentApp == null) {
             throw PaymentBizException.INVALID_APP_ID.create();
         }
+        if (!paymentApp.getAppId().equalsIgnoreCase("demo") && orderModel.getSandbox() != null && orderModel.getSandbox()) {
+            throw PaymentBizException.INVALID_SANDBOX.create();
+        }
 
         Map<String, String> params = PaymentKit.convertToMap(orderModel);
         if (!PaymentKit.verifySign(params, paymentApp.getAppCode())) {
@@ -175,6 +180,14 @@ public class PaymentOrderEndpoint extends BaseController {
         }
         if (TradeType.NATIVE.toString().equals(orderModel.getTradeType())) {
             handleWechatNative(result, paymentBill, paymentApp);
+        }
+
+        if (orderModel.getSandbox() != null && orderModel.getSandbox()) {
+            logger.debug("use sandbox, just set returnUrl to wpayUrl and set to paid. billNum={}", paymentBill.getBillNum());
+            result.put("wpayUrl", orderModel.getReturnUrl());
+            paymentBill.setStatus(BillStatus.PAID.toString());
+            paymentBillService.updateMaster(paymentBill);
+            paymentBillService.notifyPayResult(paymentBill.getAppId(), paymentBill.getOutOrderNum(), RandomStringUtils.randomAlphabetic(10));
         }
 
         return SuccessTip.create(result);

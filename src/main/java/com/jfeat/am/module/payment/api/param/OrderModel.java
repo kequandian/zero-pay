@@ -16,6 +16,8 @@ public class OrderModel {
     private String paymentType;
     private String tradeType;
 
+    private Boolean sandbox;
+
     @NotNull
     private BigDecimal totalFee;
     @NotNull
@@ -27,6 +29,15 @@ public class OrderModel {
     private String notifyUrl;
     private String customerData;
     private String returnUrl;
+
+    public Boolean getSandbox() {
+        return sandbox;
+    }
+
+    public OrderModel setSandbox(Boolean sandbox) {
+        this.sandbox = sandbox;
+        return this;
+    }
 
     public String getReturnUrl() {
         return returnUrl;
