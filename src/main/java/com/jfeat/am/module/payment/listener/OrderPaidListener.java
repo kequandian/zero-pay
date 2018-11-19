@@ -1,7 +1,10 @@
 package com.jfeat.am.module.payment.listener;
 
+import com.jfeat.am.core.support.StrKit;
 import com.jfeat.am.modular.wechat.event.PaidBean;
 import com.jfeat.am.modular.wechat.event.PaidEvent;
+import com.jfeat.am.modular.wechat.notification.MessageNotification;
+import com.jfeat.am.module.config.PaymentProperties;
 import com.jfeat.am.module.payment.services.domain.service.PaymentBillService;
 import com.jfeat.module.event.BasicEvent;
 import com.jfeat.module.event.BasicEventListener;
@@ -44,6 +47,10 @@ public class OrderPaidListener extends BasicEventListener<PaidBean> {
         String appId = strings[0];
         String orderNum = strings[1];
         paymentBillService.notifyPayResult(appId, orderNum, paidBean.getTransactionId());
+
+        paymentBillService.notifySuperVisor(orderNum, paidBean.getTransactionId());
     }
+
+
 }
 

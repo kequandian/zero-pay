@@ -7,4 +7,6 @@ import com.jfeat.am.module.payment.services.crud.service.CRUDPaymentBillService;
  */
 public interface PaymentBillService extends CRUDPaymentBillService{
     public void notifyPayResult(String appId, String orderNum, String tranId);
+
+    public void notifySuperVisor(String orderNum, String tranId);
 }

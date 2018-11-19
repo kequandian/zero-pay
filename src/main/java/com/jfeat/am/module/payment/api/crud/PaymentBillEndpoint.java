@@ -44,6 +44,8 @@ public class PaymentBillEndpoint extends BaseController {
     @GetMapping("/pay/{appId}/{orderNum}")
     @ApiOperation(value = "测试用，设置订单为支付")
     public Tip payBill(@PathVariable String appId, @PathVariable String orderNum) {
+        paymentBillService.notifySuperVisor(orderNum, "xxxx");
+
         PaymentBill paymentBill = queryPaymentBillDao.selectOne(appId, orderNum);
         if (paymentBill == null) {
             throw PaymentBizException.BILL_NOT_FOUND.create();

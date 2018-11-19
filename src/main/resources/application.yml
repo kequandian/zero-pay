@@ -29,7 +29,8 @@ server:
 #https://my.oschina.net/kingchen8080/blog/994367
 
 payment:
-  wechat-pay-url: http://www.kequandian.net/wechat/payment/wpay
+  #api-host: http://www.kequandian.net/api
+  notify-openid: xxx
 
 ###################  spring配置  ###################
 spring:

@@ -3,6 +3,8 @@ package com.jfeat.am.module.payment.services.domain.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.jfeat.am.core.support.StrKit;
 import com.jfeat.am.core.util.JsonKit;
+import com.jfeat.am.modular.wechat.notification.MessageNotification;
+import com.jfeat.am.module.config.PaymentProperties;
 import com.jfeat.am.module.payment.constant.AppStatus;
 import com.jfeat.am.module.payment.constant.BillNotifyResult;
 import com.jfeat.am.module.payment.constant.BillStatus;
@@ -17,6 +19,7 @@ import com.jfeat.am.module.payment.utils.PaymentKit;
 import com.jfeat.http.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,6 +45,11 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
     PaymentBillService paymentBillService;
     @Resource
     QueryPaymentAppDao queryPaymentAppDao;
+    @Resource
+    MessageNotification messageNotification;
+    @Resource
+    PaymentProperties paymentProperties;
+
 
     @Override
     public void notifyPayResult(String appId, String orderNum, String tranId) {
@@ -92,4 +100,16 @@ public class PaymentBillServiceImpl extends CRUDPaymentBillServiceImpl implement
             logger.error("error occurred while notifying. error = " + ex.getMessage());
         }
     }
+
+    @Override
+    public void notifySuperVisor(String orderNum, String tranId) {
+        String openid = paymentProperties.getNotifyOpenid();
+        if (StrKit.notBlank(openid)) {
+            messageNotification.setTitle("微信支付款项进账通知")
+                    .setContent("账单号:" + orderNum + ", 交易号：" + tranId)
+                    .setOpenid(openid)
+                    .send();
+        }
+    }
+
 }

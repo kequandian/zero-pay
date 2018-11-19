@@ -14,6 +14,17 @@ public class PaymentProperties {
 
     private String apiHost;
 
+    private String notifyOpenid;
+
+    public String getNotifyOpenid() {
+        return notifyOpenid;
+    }
+
+    public PaymentProperties setNotifyOpenid(String notifyOpenid) {
+        this.notifyOpenid = notifyOpenid;
+        return this;
+    }
+
     public String getApiHost() {
         return apiHost;
     }
